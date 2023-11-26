@@ -22,7 +22,6 @@ interface CommentProps {
   prd: Review;
 }
 const Comment: React.FC<CommentProps> = ({ prd }) => {
-  console.log("🚀 ~ file: Comment.tsx:23 ~ prd:", prd);
   return (
     <figure className="max-w-screen-md border-b-2 w-full p-3 md:p-5">
       <Rating name="read-only" value={3} readOnly />

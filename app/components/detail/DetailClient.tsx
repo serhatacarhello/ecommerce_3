@@ -3,27 +3,29 @@
 import Image from "next/image";
 import PageContainer from "../containers/PageContainer";
 import Counter from "../general/Counter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Rating } from "@mui/material";
 import Button from "../general/Button";
 import { IoCartOutline } from "react-icons/io5";
+import { BsCartCheck } from "react-icons/bs";
 import Comment from "./Comment";
 import Heading from "../general/Heading";
+import useCart from "@/hooks/useCart";
 
-interface Image {
+export interface Image {
   _id: string;
   public_id: string;
   url: string;
 }
 
-interface User {
+export interface User {
   userId: string;
   username: string;
   email: string;
   avatar: string;
 }
 
-interface Review {
+export interface Review {
   _id: string;
   user: User;
   productId: string;
@@ -32,7 +34,7 @@ interface Review {
   createdAt: string;
 }
 
-interface Product {
+export interface Product {
   _id: string;
   name: string;
   description: string;
@@ -65,7 +67,24 @@ type DetailClientProps = {
 };
 
 const DetailClient: React.FC<DetailClientProps> = ({ product }) => {
-  console.log("🚀 ~ file: DetailClient.tsx:30 ~ product:", product);
+  const [cardProduct, setCardProduct] = useState<CardProductProps>({
+    id: product._id,
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    quantity: 1,
+    images: product.images,
+    reviews: product.reviews,
+    stock: product.stock,
+    inStock: product.stock > 0,
+  });
+  const { productCartQty, addToBasket, cartProducts } = useCart();
+  const [displayAddedButton, setDisplayAddedButton] = useState<boolean>(false);
+
+  useEffect(() => {
+    let controlDisplay = cartProducts?.some((p) => p.id === product._id);
+    controlDisplay ? setDisplayAddedButton(true) : setDisplayAddedButton(false);
+  }, [cartProducts, product._id]);
 
   const increaseFunc = () => {
     if (cardProduct.quantity == 10) return;
@@ -81,17 +100,6 @@ const DetailClient: React.FC<DetailClientProps> = ({ product }) => {
     product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) /
     product?.reviews?.length;
 
-  const [cardProduct, setCardProduct] = useState<CardProductProps>({
-    id: product._id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    quantity: 1,
-    images: product.images,
-    reviews: product.reviews,
-    stock: product.stock,
-    inStock: product.stock > 0,
-  });
   return (
     <div className="my-10">
       <PageContainer>
@@ -243,22 +251,32 @@ const DetailClient: React.FC<DetailClientProps> = ({ product }) => {
               </svg>
               {product.stock > 0 ? "In stock " : "Check availability in store"}
             </button>
-            <div className="">
-              <Counter
-                cardProduct={cardProduct}
-                increaseFunc={increaseFunc}
-                decreaseFunc={decreaseFunc}
-              />
-            </div>
-            <Button
-              text="Add to Cart"
-              onClick={(e) => {
-                console.log(e);
-              }}
-              outline
-              icon={<IoCartOutline size={24} />}
-              disabled={product.stock == 0}
-            />
+            {displayAddedButton ? (
+              <div className="my-3">
+                <Button
+                  text="Product Added"
+                  outline
+                  icon={<BsCartCheck size={25} />}
+                />
+              </div>
+            ) : (
+              <>
+                {" "}
+                <Counter
+                  cardProduct={cardProduct}
+                  increaseFunc={increaseFunc}
+                  decreaseFunc={decreaseFunc}
+                />
+                <Button
+                  text="Add to Cart"
+                  onClick={() => addToBasket(cardProduct)}
+                  outline
+                  icon={<IoCartOutline size={24} />}
+                  disabled={product.stock == 0}
+                />
+              </>
+            )}
+
             <div>
               <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 dark:text-gray-300 mt-7">
                 {product.description}
@@ -367,7 +385,6 @@ const DetailClient: React.FC<DetailClientProps> = ({ product }) => {
         <div className="border border-b-2"></div>
         <div className="flex flex-col items-start justify-center gap-3 md:gap-5">
           {product?.reviews?.map((review: Review) => {
-            console.log("🚀 ~ file: DetailClient.tsx:366 ~ review:", review);
             return <Comment key={review._id} prd={review} />;
           })}
         </div>

@@ -43,7 +43,6 @@ interface Product {
   __v: number;
 }
 
-
 interface ProductCardProps {
   product: Product;
 }
@@ -55,7 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   //   product?.reviews?.length;
   return (
     <div className=" max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="relative h-[150px] rounded-lg">
+      <div className="relative h-fit rounded-lg">
         {/* like button */}
         <div className="absolute z-20 flex flex-col top-0 right-0 p-3">
           <button className="transition ease-in duration-300 bg-gray-800  hover:text-purple-500 shadow hover:shadow-md text-gray-500 rounded-full w-8 h-8 text-center p-1">
@@ -77,16 +76,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {product.images && product.images.length > 0 && (
-          <Image
-            src={product.images[0].url} // 0. indeksi kullanıyorum
-            alt=""
-            fill
-            className="object-cover rounded-t-lg"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          <div className="flex relative h-[250px]">
+            <Image
+              src={product.images[0].url} // 0. indeksi kullanıyorum
+              alt=""
+              fill
+              className="object-cover rounded-t-lg"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
         )}
       </div>
-      <div className="px-5 pb-5">
+      <div className="p-3 pb-5 sm:p-5 bg-red-50">
         <a href="#">
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate">
             {product.name}
