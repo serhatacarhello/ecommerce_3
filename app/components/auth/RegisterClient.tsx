@@ -7,6 +7,9 @@ import Button from "../general/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 const RegisterClient = () => {
   const router = useRouter();
   const {
@@ -16,7 +19,36 @@ const RegisterClient = () => {
     formState: { errors },
   } = useForm<FieldValues>();
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log(
+      "🚀 ~ file: RegisterClient.tsx:20 ~ RegisterClient ~ data:",
+      data
+    );
+    try {
+      const res = await axios.post(`/api/register`, data);
+
+      console.log(
+        "🚀 ~ file: RegisterClient.tsx:27 ~ constonSubmit:SubmitHandler<FieldValues>= ~ res:",
+        res
+      );
+      if (res.status === 200) {
+        toast.success("User successfully created!");
+
+        await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+        router.push("/cart");
+        router.refresh();
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred during registration. Please try again.");
+      console.error("Registration error:", error);
+    }
+  };
   return (
     <AuthContainer>
       <div className="w-full max-w-md p-2 sm:p-3 shadow-lg rounded-md">

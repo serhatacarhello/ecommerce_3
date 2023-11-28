@@ -7,6 +7,8 @@ import Button from "../general/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 const LoginClient = () => {
   const router = useRouter();
   const {
@@ -15,7 +17,22 @@ const LoginClient = () => {
     watch,
     formState: { errors },
   } = useForm<FieldValues>();
-  const onSubmit: SubmitHandler<FieldValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log("🚀 ~ file: LoginClient.tsx:21 ~ LoginClient ~ data:", data);
+    signIn("credentials", {
+      ...data,
+      redirect: false,
+    }).then((callback) => {
+      if (callback?.ok) {
+        router.push("/cart");
+        router.refresh();
+        toast.success("Successfully signed in!");
+      } else if (callback?.error) {
+        toast.error(callback.error);
+      }
+    });
+  };
+
   return (
     <AuthContainer>
       <div className="w-full max-w-md p-2 sm:p-3 shadow-lg rounded-md">
