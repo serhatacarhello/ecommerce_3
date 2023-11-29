@@ -41,12 +41,11 @@ export const Auth: React.FC<UserProps> = ({ currentUser }) => {
   const menuFunc = async (url: string, name: string) => {
     if (name === "Logout") {
       router.push(url);
-      toggleMenu();
       await signOut();
     } else {
       router.push(url);
-      toggleMenu();
     }
+    toggleMenu();
   };
 
   return (
@@ -58,9 +57,9 @@ export const Auth: React.FC<UserProps> = ({ currentUser }) => {
         <div className="">
           {currentUser ? (
             currentUser.image && currentUser.name ? (
-              <div className="relative w-24 h-24">
+              <div className="relative w-10 h-10 bg-transparent">
                 <Image
-                  className="object-cover"
+                  className="object-cover rounded-full"
                   src={currentUser?.image}
                   alt={currentUser?.name}
                   fill
@@ -73,7 +72,10 @@ export const Auth: React.FC<UserProps> = ({ currentUser }) => {
             <FaRegUserCircle size={25} />
           )}
         </div>
-        <div className=""> {currentUser ? currentUser.name : "User"}</div>
+        <div className="flex flex-nowrap  truncate">
+          {" "}
+          {currentUser ? currentUser.name : "User"}
+        </div>
       </div>
       {openMenu && (
         <div className="absolute w-32 top-10 bg-white dark:bg-gray-800 shadow-lg right-0 rounded-md  text-slate-500 dark:text-white">

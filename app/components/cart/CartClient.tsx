@@ -1,14 +1,20 @@
 "use client";
 import useCart from "@/hooks/useCart";
-import React from "react";
+import React, { useEffect } from "react";
 import PageContainer from "../containers/PageContainer";
 import Image from "next/image";
-import Button from "../general/Button";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { CardProductProps } from "../detail/DetailClient";
 import Counter from "../general/Counter";
+import { User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
-const CartClient = () => {
+interface CartClientProps {
+  currentUser: User | null | undefined;
+}
+
+const CartClient: React.FC<CartClientProps> = ({ currentUser }) => {
+  const router = useRouter();
   const {
     cartProducts,
     removeFromBasket,
@@ -16,6 +22,13 @@ const CartClient = () => {
     addToBasketIncrease,
     addToBasketDecrease,
   } = useCart();
+
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  });
+
   console.log(
     "🚀 ~ file: CartClient.tsx:8 ~ CartClient ~ cartProducts:",
     cartProducts

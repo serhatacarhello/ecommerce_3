@@ -9,14 +9,23 @@ import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
-const LoginClient = () => {
+import { User } from "@prisma/client";
+import { useEffect } from "react";
+
+interface LoginClientProps {
+  currentUser: User | null | undefined;
+}
+
+const LoginClient: React.FC<LoginClientProps> = ({ currentUser }) => {
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<FieldValues>();
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log("🚀 ~ file: LoginClient.tsx:21 ~ LoginClient ~ data:", data);
     signIn("credentials", {
@@ -32,6 +41,17 @@ const LoginClient = () => {
       }
     });
   };
+
+  const signInWithGoogle = async () => {
+    await signIn("google");
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/cart");
+      router.refresh();
+    }
+  });
 
   return (
     <AuthContainer>
@@ -62,7 +82,7 @@ const LoginClient = () => {
           </div>
           <Button
             text="Log in with Google"
-            onClick={() => {}}
+            onClick={signInWithGoogle}
             outline
             icon={<FcGoogle size={25} />}
           />
