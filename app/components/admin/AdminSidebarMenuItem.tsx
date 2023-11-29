@@ -32,3 +32,5 @@ const AdminSidebarMenuItem: React.FC<AdminSidebarMenuItemProps> = ({
 };
 
 export default AdminSidebarMenuItem;
+
+// go and create a model for product under prisma 
