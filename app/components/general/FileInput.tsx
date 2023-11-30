@@ -9,9 +9,10 @@ interface InputProps {
   required?: boolean;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({
+const FileInput: React.FC<InputProps> = ({
   id,
   placeholder,
   disabled,
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   required,
   register,
   errors,
+  onChange,
 }) => {
   const isError = errors && errors[id];
 
@@ -55,6 +57,7 @@ const Input: React.FC<InputProps> = ({
         disabled={disabled}
         type={type}
         {...register(id, { required })}
+        onChange={onChange}
       />
       {errors[id]?.type === "required" && (
         <p className="text-red-500" role="alert">
@@ -65,4 +68,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input;
+export default FileInput;

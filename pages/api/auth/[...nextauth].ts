@@ -26,6 +26,7 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        console.log("🚀 ~ file: [...nextauth].ts:29 ~ authorize ~ credentials:", credentials)
         if (!credentials?.email) {
           throw new Error("Invalid email");
         }

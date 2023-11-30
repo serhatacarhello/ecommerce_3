@@ -27,42 +27,12 @@ id  String  @id @default(auto()) @map("_id") @db.ObjectId
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
+   @@map("accounts")
 }
 
 enum Role{
 USER
 ADMIN
-}
-
-model Review{
-  id               String  @id @default(auto()) @map("_id") @db.ObjectId 
-  userId           String @db.ObjectId
-  productId        String @db.ObjectId
-  rating           Int
-  comment          String  
-  createdAt        DateTime @default(now())
-  product          Product @relation(fields: [productId], references: [id])
-  user             User @relation(fields: [userId], references: [id], onDelete:Cascade)   
-}
-
-model Product {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description         String 
-  price Float
-  brand String
-  category String
-  inStock Boolean
-  image String
-  reviews Review[]
- 
-  createdAt     DateTime @default(now())
-  updateAt      DateTime @updatedAt
-  
-
-
-   @@map("products")
 }
 
 model User {
@@ -77,8 +47,35 @@ model User {
   role          Role @default(USER)
   accounts      Account[]
   reviews       Review[]
-
-
    @@map("users")
+}
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Product {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  description String
+  price     Float
+  brand     String
+  category  String
+  inStock   Boolean
+  image     String
+  reviews   Review[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("products")
 }
 

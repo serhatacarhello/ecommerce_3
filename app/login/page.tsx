@@ -1,11 +1,9 @@
 import { getCurrentUser } from "../actions/getCurrentUser";
 import LoginClient from "../components/auth/LoginClient";
 
-
-
-
 const Login = async () => {
   const currentUser = await getCurrentUser();
+  console.log("🚀 ~ file: page.tsx:6 ~ Login ~ currentUser:", currentUser);
   return (
     <div>
       <LoginClient currentUser={currentUser} />
@@ -14,3 +12,5 @@ const Login = async () => {
 };
 
 export default Login;
+
+

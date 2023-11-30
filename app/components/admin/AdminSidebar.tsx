@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { RxDashboard } from "react-icons/rx";
+import { MdOutlineDashboard } from "react-icons/md";
 import { LiaProductHunt } from "react-icons/lia";
 import { FaUsers } from "react-icons/fa6";
 import { TbMailbox } from "react-icons/tb";
@@ -11,7 +11,7 @@ export const adminDashboardMenu = [
   {
     id: 1,
     label: "Dashboard",
-    icon: <RxDashboard />,
+    icon: <MdOutlineDashboard />,
     link: "/admin",
   },
   {

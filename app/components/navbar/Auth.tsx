@@ -12,7 +12,7 @@ interface UserProps {
 }
 
 export const Auth: React.FC<UserProps> = ({ currentUser }) => {
-  console.log("🚀 ~ file: Auth.tsx:10 ~ currentUser:", currentUser);
+  console.log("🚀 ~ file: Auth.tsx:15 ~ currentUser:", currentUser);
   const router = useRouter();
   const [openMenu, setOpenMenu] = useState(false);
   const toggleMenu = () => setOpenMenu(!openMenu);
