@@ -17,7 +17,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  stock: number;
+  inStock: boolean;
   category: string;
   rating: number;
   images: Image[];

@@ -47,10 +47,13 @@ const LoginClient: React.FC<LoginClientProps> = ({ currentUser }) => {
   };
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && currentUser.role === "ADMIN") {
+      router.push("/admin");
+      router.refresh();
+    } else if (currentUser && currentUser.role === "USER") {
       router.push("/cart");
       router.refresh();
-    }
+    } else router.push("/");
   });
 
   return (

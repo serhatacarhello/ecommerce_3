@@ -2,7 +2,6 @@ import React from "react";
 import Heading from "../general/Heading";
 import ProductCard from "./ProductCard";
 import { products } from "@/utils/Products";
-import ProductCard2 from "./ProductCard2";
 
 interface Image {
   _id: string;

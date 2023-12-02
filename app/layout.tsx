@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
-import Home from "./page";
 import Providers from "@/providers/Providers";
 import { Toaster } from "react-hot-toast";
 
@@ -23,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen mx-auto">
             <Navbar />
             <main className=" flex-grow">{children}</main>
             <Footer />

@@ -29,8 +29,9 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import firebaseApp from "@/libs/firebase";
-import { resolve } from "path";
+import { v4 as uuidv4 } from "uuid";
 import FileInput from "../general/FileInput";
+import axios from "axios";
 
 const CreateForm = () => {
   const router = useRouter();
@@ -51,9 +52,10 @@ const CreateForm = () => {
   const {
     register,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty, isLoading, isValid },
     setValue,
     handleSubmit,
+    reset,
   } = useForm<FieldValues>({
     defaultValues: {
       name: "",
@@ -72,8 +74,14 @@ const CreateForm = () => {
     // Add logic to handle form submission
     const handleChange = async (): Promise<string | null> => {
       try {
+        if (!image) {
+          toast.error("Upload an image please.");
+          return null;
+        }
+
         const storage = getStorage(firebaseApp);
-        const storageRef = ref(storage, `images/${image?.name}`);
+        const imageId = uuidv4();
+        const storageRef = ref(storage, `images/${imageId}_${image?.name}`);
         const uploadTask = uploadBytesResumable(storageRef, image);
 
         return new Promise<string | null>((resolve, reject) => {
@@ -115,10 +123,18 @@ const CreateForm = () => {
       ...data,
       image: uploadedImage,
     };
-    console.log(
-      "🚀 ~ file: CreateForm.tsx:114 ~ constonSubmit:SubmitHandler<FieldValues>= ~ newData:",
-      newData
-    );
+    axios
+      .post("/api/product", newData)
+      .then(() => {
+        toast.success("Product successfully added.");
+        router.refresh();
+        reset(); // reset form
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //onSubmit
   };
 
   const category = watch("category");
@@ -135,75 +151,80 @@ const CreateForm = () => {
       setImage(evt.target.files[0]);
     }
   };
-  console.log(image);
 
   return (
-    <div className="w-full max-w-md p-2 sm:p-3 shadow-lg rounded-md  py-5 bg-red-100">
-      <Heading text="Add Product" center />
+    <div className="flex justify-center items-center w-full pt-0 p-2 md:p-5">
+      <div className="w-full  max-w-md p-2 sm:p-3 shadow-lg rounded-md  py-5 bg-red-100">
+        <Heading text="Add Product" center />
 
-      <Input
-        id="name"
-        placeholder="Product Name"
-        type="text"
-        register={register}
-        errors={errors}
-      />
+        <Input
+          id="name"
+          placeholder="Product Name"
+          type="text"
+          register={register}
+          errors={errors}
+        />
 
-      <Input
-        id="description"
-        placeholder="Product Description"
-        type="text"
-        register={register}
-        errors={errors}
-      />
+        <Input
+          id="description"
+          placeholder="Product Description"
+          type="text"
+          register={register}
+          errors={errors}
+        />
 
-      <Input
-        id="price"
-        placeholder="Product Price"
-        type="number"
-        register={register}
-        errors={errors}
-      />
+        <Input
+          id="price"
+          placeholder="Product Price"
+          type="number"
+          register={register}
+          errors={errors}
+        />
 
-      <Input
-        id="brand"
-        placeholder="Product Brand"
-        type="text"
-        register={register}
-        errors={errors}
-      />
-      <div className="flex items-center flex-wrap gap-1 my-2">
-        {/* category */}
-        <label
-          className={`block w-full mb-2 text-sm font-medium text-green-700 dark:text-green-500`}
-        >
-          Category
-        </label>
-        {categoryList.map((categoryItem) => (
-          <ChoiceInput
-            key={categoryItem.name}
-            text={categoryItem.name}
-            icon={categoryItem.icon}
-            onClick={() => setCustomValue("category", categoryItem.name)}
-            selected={category === categoryItem.name}
+        <Input
+          id="brand"
+          placeholder="Product Brand"
+          type="text"
+          register={register}
+          errors={errors}
+        />
+        <div className="flex items-center flex-wrap gap-1 my-2">
+          {/* category */}
+          <label
+            className={`block w-full mb-2 text-sm font-medium text-green-700 dark:text-green-500`}
+          >
+            Category
+          </label>
+          {categoryList.map((categoryItem) => (
+            <ChoiceInput
+              key={categoryItem.name}
+              text={categoryItem.name}
+              icon={categoryItem.icon}
+              onClick={() => setCustomValue("category", categoryItem.name)}
+              selected={category === categoryItem.name}
+            />
+          ))}
+        </div>
+        <Checkbox id="inStock" label="In Stock?" register={register} />
+
+        <FileInput
+          id="image" 
+          type="file"
+          placeholder="Product Image"
+          register={register}
+          required
+          errors={errors}
+          onChange={handleFileInputFunc} 
+        />
+
+        <div className="flex flex-col gap-1 items-center justify-center">
+          <Button
+            text="Add Product"
+            onClick={handleSubmit(onSubmit)}
+            small
+            disabled={!isDirty || !isValid || isLoading}
           />
-        ))}
-      </div>
-      <Checkbox id="inStock" label="In Stock?" register={register} />
-
-      <FileInput
-        id="image" // Replace with the appropriate ID
-        type="file"
-        placeholder="Product Image"
-        register={register}
-        required
-        errors={errors}
-        onChange={handleFileInputFunc} // Pass your file input change handler
-      />
-      
-
-      <div className="flex flex-col gap-1 items-center justify-center">
-        <Button text="Add Product" onClick={handleSubmit(onSubmit)} small />
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,4 @@
-import React from "react";
-
-const AuthContainer = ({ children }: { children: React.ReactNode }) => {
+const AuthContainer = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex justify-center items-center h-full  w-full my-4 min-h-fit  ">
       {children}

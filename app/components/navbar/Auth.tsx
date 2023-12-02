@@ -78,7 +78,7 @@ export const Auth: React.FC<UserProps> = ({ currentUser }) => {
         </div>
       </div>
       {openMenu && (
-        <div className="absolute w-32 top-10 bg-white dark:bg-gray-800 shadow-lg right-0 rounded-md  text-slate-500 dark:text-white">
+        <div className="absolute z-50 w-32 top-10 bg-white dark:bg-gray-800 shadow-lg right-0 rounded-md  text-slate-500 dark:text-white">
           <div className="space-y-2">
             {currentUser
               ? loginMenuItems.map((item) => (

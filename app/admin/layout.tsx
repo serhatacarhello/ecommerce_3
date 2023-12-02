@@ -1,12 +1,13 @@
 import React from "react";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminContainer from "../components/containers/AdminContainer";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className=" flex gap-3 ">
+    <AdminContainer>
       <AdminSidebar />
       {children}
-    </div>
+    </AdminContainer>
   );
 };
 

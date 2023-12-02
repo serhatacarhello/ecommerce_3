@@ -46,7 +46,7 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
           password: data.password,
           redirect: false,
         });
-        router.push("/cart");
+        router.push("/login");
         router.refresh();
       } else {
         toast.error("Registration failed. Please try again.");
@@ -63,7 +63,7 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
 
   useEffect(() => {
     if (currentUser) {
-      router.push("/cart");
+      router.push("/login");
       router.refresh();
     }
   });
